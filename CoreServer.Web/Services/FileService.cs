@@ -34,7 +34,7 @@ namespace CoreServer.Services
                 return null;
             }
 
-            var fullPath = Path.GetRelativePath(ServePath, filePath);
+            var fullPath = CombinePaths(ServePath, filePath);
             if (!fullPath.StartsWith(ServePath))
             {
                 _logger.LogWarning($"File not served for safety. Relative path: {filePath}");
@@ -52,7 +52,7 @@ namespace CoreServer.Services
 
         private IEnumerable<string> GetFilesList(bool relative)
         {
-            var allFiles = Directory.GetFiles(ServePath, "*.*", SearchOption.AllDirectories).ToList();
+            var allFiles = Directory.GetFiles(ServePath, "*.*", SearchOption.AllDirectories).Where(x => Regex.IsMatch(x, _settings.AllowedFilesRegex)).ToList();
             if (_settings.IgnoreApplicationPath && BasePath.StartsWith(ServePath))
             {
                 allFiles = allFiles.Where(x => !x.StartsWith(BasePath)).ToList();
@@ -66,16 +66,17 @@ namespace CoreServer.Services
             return allFiles;
         }
 
-        private string GetServePath()
+        private string GetServePath() => CombinePaths(BasePath, _settings.ServePath);
+
+        private static string CombinePaths(string basePath, string relativePath)
         {
-            var servePath = _settings.ServePath;
-            if (servePath.StartsWith("\\"))
+            if (relativePath.StartsWith("\\"))
             {
-                servePath = servePath.Substring(1);
+                relativePath = relativePath.Substring(1);
             }
 
-            var combinePath = Path.Combine(BasePath, servePath);
-            return Path.GetFullPath(combinePath);
+            var combinedPath = Path.Combine(basePath, relativePath);
+            return Path.GetFullPath(combinedPath);
         }
     }
 }
