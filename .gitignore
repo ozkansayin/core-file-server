@@ -1,0 +1,16 @@
+bin/
+App_Data/
+obj/
+GeneratedArtifacts/
+ClientBin/
+_Pvt_Extensions/
+packages/
+.vs/
+data/
+
+*.log.txt
+*.suo
+*.user
+*.aps
+*.eto
+
