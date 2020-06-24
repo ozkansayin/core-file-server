@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,7 +9,7 @@ namespace CoreServer.Services
     public class FileService : IFileService
     {
         private readonly ILogger<FileService> _logger;
-        private readonly CoreServerSettings _settings;
+        //private readonly CoreServerSettings _settings;
 
         private string _basePath;
         private string _servePath;
@@ -19,7 +17,7 @@ namespace CoreServer.Services
         public FileService(ILogger<FileService> logger, IOptions<CoreServerSettings> options)
         {
             _logger = logger;
-            _settings = options.Value;
+            //_settings = options.Value;
         }
 
         public string BasePath => !string.IsNullOrEmpty(_basePath) ? _basePath : (_basePath = Directory.GetCurrentDirectory());
@@ -29,10 +27,10 @@ namespace CoreServer.Services
 
         public Stream GetFileStream(string filePath)
         {
-            if (!Regex.IsMatch(filePath, _settings.AllowedFilesRegex))
-            {
-                return null;
-            }
+            //if (!Regex.IsMatch(filePath, _settings.AllowedFilesRegex))
+            //{
+            //    return null;
+            //}
 
             var fullPath = CombinePaths(ServePath, filePath);
             if (!fullPath.StartsWith(ServePath))
@@ -52,21 +50,37 @@ namespace CoreServer.Services
 
         private IEnumerable<string> GetFilesList(bool relative)
         {
-            var allFiles = Directory.GetFiles(ServePath, "*.*", SearchOption.AllDirectories).Where(x => Regex.IsMatch(x, _settings.AllowedFilesRegex)).ToList();
-            if (_settings.IgnoreApplicationPath && BasePath.StartsWith(ServePath))
-            {
-                allFiles = allFiles.Where(x => !x.StartsWith(BasePath)).ToList();
-            }
+            //var allFiles = Directory.GetFiles(ServePath, "*.*", SearchOption.AllDirectories).Where(x => Regex.IsMatch(x, _settings.AllowedFilesRegex)).ToList();
+            var allFiles = Directory.GetFiles(ServePath, "*.*", SearchOption.AllDirectories).ToList();
+
+            //if (_settings.IgnoreApplicationPath && BasePath.StartsWith(ServePath))
+            //{
+            //    allFiles = allFiles.Where(x => !x.StartsWith(BasePath)).ToList();
+            //}
 
             if (relative)
             {
-                allFiles = allFiles.Select(x => x.Substring(ServePath.Length)).ToList();
+                allFiles = allFiles.Select(x =>
+                {
+                    var str = x.Substring(ServePath.Length);
+                    if(str.StartsWith("\\"))
+                    {
+                        str = str.Substring(1);
+                    }
+                    return str;
+                }).ToList();
             }
 
             return allFiles;
         }
 
-        private string GetServePath() => CombinePaths(BasePath, _settings.ServePath);
+        private string GetServePath()
+        {
+            //var path = CombinePaths(BasePath, _settings.ServePath);
+            //Console.WriteLine($"Serve path: {path}");
+            var path = BasePath;
+            return path;
+        }
 
         private static string CombinePaths(string basePath, string relativePath)
         {

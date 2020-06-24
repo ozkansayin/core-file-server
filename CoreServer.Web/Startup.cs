@@ -21,7 +21,7 @@ namespace CoreServer
         {
             services.AddControllers();
             services.AddSingleton<IFileService, FileService>();
-            services.Configure<CoreServerSettings>(Configuration.GetSection("CoreServer"));
+            //services.Configure<CoreServerSettings>(Configuration.GetSection("CoreServer"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
