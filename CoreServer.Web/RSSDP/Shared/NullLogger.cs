@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Rssdp
 {
@@ -34,6 +31,7 @@ namespace Rssdp
 		/// <param name="message">Unused as this implementation does not log.</param>
 		public void LogError(string message)
 		{
+			Console.WriteLine($"[Ssdp] Error: {message}");
 		}
 
 		/// <summary>
@@ -42,6 +40,7 @@ namespace Rssdp
 		/// <param name="message">Unused as this implementation does not log.</param>
 		public void LogInfo(string message)
 		{
+			Console.WriteLine($"[Ssdp] Info: {message}");
 		}
 
 		/// <summary>
@@ -50,6 +49,7 @@ namespace Rssdp
 		/// <param name="message">Unused as this implementation does not log.</param>
 		public void LogVerbose(string message)
 		{
+			Console.WriteLine($"[Ssdp] Verbose: {message}");
 		}
 
 		/// <summary>
@@ -58,6 +58,7 @@ namespace Rssdp
 		/// <param name="message">Unused as this implementation does not log.</param>
 		public void LogWarning(string message)
 		{
+			Console.WriteLine($"[Ssdp] Warning: {message}");
 		}
 	}
 }

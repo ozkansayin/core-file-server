@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoreServer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class FilesController : ControllerBase
     {
         private readonly IFileService _fileService;
@@ -28,7 +27,7 @@ namespace CoreServer.Controllers
         }
 
         [HttpGet]
-        [Route("download/{path}")]
+        [Route("{path}")]
         public IActionResult Download(string path)
         {
             var stream = _fileService.GetFileStream(path);
@@ -43,7 +42,8 @@ namespace CoreServer.Controllers
 
         private string GetFileDownloadLink(string path)
         {
-            return Url.Action("Download", new { path }).ToLowerInvariant();
+            //Substring(1) to get rid of the forward slash at the beginning of the string
+            return Url.Action("Download", new { path }).ToLowerInvariant().Substring(1);
         }
     }
 }

@@ -4,7 +4,7 @@
         "CoreServer": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "files/list",
+      "launchUrl": "",
       "applicationUrl": "http://localhost:8080",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
